@@ -96,7 +96,7 @@
 
   <!-- task evaluators -->
 
-  <node pkg="tmc_gazebo_task_evaluators" type="object_in_box_detector" name="any_in_drawerleft_detector" output="screen">
+  <!--node pkg="tmc_gazebo_task_evaluators" type="object_in_box_detector" name="any_in_drawerleft_detector" output="screen">
     <param name="box_name" value="trofast_1" />
     <rosparam param="box_size">[0.35, 0.21, 0.25]</rosparam>
     <rosparam param="box_pose">[0, 0, 0.125]</rosparam>
@@ -250,5 +250,5 @@
   </node>
 
   <node pkg="tmc_gazebo_task_evaluators" type="wrs_score_counter" name="wrs_score_counter" output="screen">
-  </node>
+  </node-->
 </launch>
