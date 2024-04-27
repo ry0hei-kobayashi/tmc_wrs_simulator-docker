@@ -1,0 +1,26 @@
+version: '3'
+services:
+  wrs_simulator:
+    image: wrs_simulator_docker:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+     - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      DISPLAY: $DISPLAY
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      #ROS_MASTER_URI: $ROS_MASTER_URI
+      ROS_MASTER_URI: http://172.16.200.151:11311
+      ROS_IP: 172.16.200.151
+    working_dir: /catkin_ws
+    network_mode: "host"
+      #deploy:
+      #  resources:
+      #    reservations:
+      #      devices:
+      #        - driver: nvidia
+      #          count: 1
+      #          capabilities: [gpu]
+
+    command: roslaunch hsrb_wrs_gazebo_launch wrs_sim.launch
