@@ -24,8 +24,4 @@ services:
               count: 1
               capabilities: [gpu]
 
-
-
-
-
-    command: roslaunch hsrb_wrs_gazebo_launch wrs_sim.launch
+    command: roslaunch hsrb_wrs_gazebo_launch rcj24_final_gpsr.launch
