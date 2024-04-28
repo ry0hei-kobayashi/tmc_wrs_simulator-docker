@@ -48,6 +48,8 @@ COPY ./tmc_wrs_gazebo_worlds   /catkin_ws/src/tmc_wrs_gazebo_worlds
 RUN cd && cd /catkin_ws && . /opt/ros/noetic/setup.sh && catkin_make
 RUN echo "source ./catkin_ws/devel/setup.bash" >> .bashrc
 
+RUN apt-get install -y mesa-utils libgl1-mesa-glx python-is-python3
+
 #setup entrypoint
 COPY ./ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]

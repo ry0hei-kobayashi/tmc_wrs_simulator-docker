@@ -6,21 +6,26 @@ services:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-     - /tmp/.X11-unix:/tmp/.X11-unix
+     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     environment:
       DISPLAY: $DISPLAY
+      QT_X11_NO_MITSHM: 1
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
-      #ROS_MASTER_URI: $ROS_MASTER_URI
-      ROS_MASTER_URI: http://172.16.200.151:11311
-      ROS_IP: 172.16.200.151
+      ROS_MASTER_URI: http://172.16.200.72:11311
+      ROS_IP: 172.16.200.72
     working_dir: /catkin_ws
     network_mode: "host"
-      #deploy:
-      #  resources:
-      #    reservations:
-      #      devices:
-      #        - driver: nvidia
-      #          count: 1
-      #          capabilities: [gpu]
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+
+
+
 
     command: roslaunch hsrb_wrs_gazebo_launch wrs_sim.launch
