@@ -29,8 +29,8 @@ services:
     #          count: 1
     #          capabilities: [gpu]
     
-    command: roslaunch hsrb_wrs_gazebo_launch rcj24_final_gpsr.launch paused:=false
-    #command: roslaunch hsrb_wrs_gazebo_launch rcj24_final_gpsr.launch
+    #command: roslaunch hsrb_wrs_gazebo_launch rcj24_final_gpsr.launch paused:=false
+    command: roslaunch hsrb_wrs_gazebo_launch wrs_practice0_easy_tmc.launch paused:=false
 
     #if required xauth please generate host pc
 
