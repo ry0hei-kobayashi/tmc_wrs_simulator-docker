@@ -1,0 +1,39 @@
+version: '3'
+services:
+  wrs_simulator-nvidia:
+    image: wrs_simulator_docker-nvidia:latest
+    build:
+      context: ..
+      dockerfile: env_docker/Dockerfile.nvidia
+    volumes:
+     - /tmp/.X11-unix:/tmp/.X11-unix:rw
+     #- ~/.Xauthority:/root/.Xauthority
+    environment:
+      ROS_MASTER_URI: http://10.65.7.123:11311
+      ROS_IP: 10.65.7.123
+      #XAUTHORITY: /root/.Xauthority
+      DISPLAY: $DISPLAY
+      QT_X11_NO_MITSHM: 1
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      NVIDIA_VISIBLE_DEVICES: all
+      __NV_PRIME_RENDER_OFFLOAD: 1
+      __GLX_VENDOR_LIBRARY_NAME: nvidia
+      NVIDIA_DRIVER_CAPABILITIES: graphics,display,compute,utility
+    runtime: nvidia
+    working_dir: /catkin_ws
+    network_mode: "host"
+    privileged: true
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
+    #command: roslaunch hsrb_wrs_gazebo_launch rcj24_final_gpsr.launch paused:=false
+    command: roslaunch hsrb_wrs_gazebo_launch wrs_practice0_easy_tmc.launch paused:=false
+
+    #if required xauth please generate host pc
+

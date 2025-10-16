@@ -1,5 +1,4 @@
-FROM osrf/ros:noetic-desktop-full
-
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
 
 RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
 
@@ -10,13 +9,25 @@ ENV LC_ALL=C.UTF-8
 ENV export LANG=C.UTF-8
 # no need input key
 ENV DEBIAN_FRONTEND noninteractive
+            
+ARG __NV_PRIME_RENDER_OFFLOAD=1
+ARG __GLX_VENDOR_LIBRARY_NAME=nvidia
+ARG NVIDIA_DRIVER_CAPABILITIES=graphics,display,compute,utility
+
 SHELL ["/bin/bash", "-c"]
 
 #-----------------------------
 #install common pkg
 #-----------------------------
 RUN apt-get -y update
-RUN apt-get -y install git ssh python3-pip wget net-tools vim curl make build-essential lsb-release
+RUN apt-get -y install git ssh python3-pip wget net-tools vim curl make build-essential lsb-release mesa-utils libgl1-mesa-glx python-is-python3
+#-----------------------------
+#install ros-noetic pkg
+#-----------------------------
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+RUN apt-get update -y
+RUN apt-get install -y ros-noetic-desktop-full
 
 #-----------------------------
 #install tmc-ros pkg
@@ -38,19 +49,16 @@ RUN apt-get install -y ros-noetic-tmc-desktop-full
 RUN mkdir -p /catkin_ws/src
 WORKDIR /catkin_ws
 
-RUN echo "source /opt/ros/noetic/setup.sh" >> .bashrc
-
 RUN cd /catkin_ws/src && . /opt/ros/noetic/setup.sh && catkin_init_workspace
 
-COPY ./hsrb_wrs_gazebo_launch /catkin_ws/src/hsrb_wrs_gazebo_launch
-COPY ./tmc_wrs_gazebo_worlds   /catkin_ws/src/tmc_wrs_gazebo_worlds
+COPY ../hsrb_wrs_gazebo_launch /catkin_ws/src/hsrb_wrs_gazebo_launch
+COPY ../tmc_wrs_gazebo_worlds   /catkin_ws/src/tmc_wrs_gazebo_worlds
 
 RUN cd && cd /catkin_ws && . /opt/ros/noetic/setup.sh && catkin_make
 RUN echo "source ./catkin_ws/devel/setup.bash" >> .bashrc
 
-RUN apt-get install -y mesa-utils libgl1-mesa-glx python-is-python3
 
 #setup entrypoint
-COPY ./ros_entrypoint.sh /
+COPY ../assets/ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]
 
